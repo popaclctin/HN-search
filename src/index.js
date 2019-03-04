@@ -12,5 +12,5 @@ ReactDOM.render(<App />, document.getElementById("root"));
 serviceWorker.unregister();
 
 if (module.hot) {
-  modlue.hot.accept();
+  module.hot.accept();
 }
