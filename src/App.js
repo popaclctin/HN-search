@@ -1,34 +1,26 @@
 import React, { Component } from "react";
 import "./App.css";
+import { data } from "./api-response.js";
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: null,
+      data,
       isLoading: false
     };
   }
 
-  fetchLocalJSON() {
-    this.setState({ isLoading: true });
-    fetch("./api-response.json")
-      .then(response => response.json())
-      .then(data => this.setState({ data: data, isLoading: false }));
-  }
-
-  componentDidMount() {
-    this.fetchLocalJSON();
-  }
+  componentDidMount() {}
 
   render() {
     const { isLoading, data } = this.state;
-    const hits = !isLoading ? data.hits : [];
+    const hits = data ? data.hits : [];
     const list = hits.map(item => <Item key={item.objectID} item={item} />);
     return (
       <div className="App">
         <Header />
-        <main>{list}</main>
+        <main>{!isLoading && list}</main>
         <Nav />
       </div>
     );
@@ -38,7 +30,7 @@ class App extends Component {
 const Header = props => {
   return (
     <header>
-      <img src="#" />
+      <img src="#" alt="HN Search logo" />
       <h1>Search Hacker News</h1>
       <input type="text" />
     </header>
