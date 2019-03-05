@@ -1,33 +1,100 @@
 .App {
-  text-align: center;
+  margin: 0 auto;
+  width: 75%;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
-}
+/* Header */
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+header {
+  padding: 10px;
+  background-color: #ff7416;
   color: white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
 }
 
-.App-link {
-  color: #61dafb;
+.search {
+  height: 50px;
+  background-image: url(img/iconfinder-icon.svg);
+  background-repeat: no-repeat;
+  background-position: left;
+  padding-left: 35px;
+  flex: 3;
+  outline: none;
+  border: 0;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+header h1 {
+  margin: 0 10px;
+}
+
+.logo {
+  max-width: 50px;
+}
+
+/* Main */
+
+main {
+  background-color: rgb(246, 246, 239);
+}
+
+.item {
+  padding: 10px;
+}
+
+.item p {
+  margin: 3px 0;
+}
+
+.item .info {
+  font-size: 13px;
+  color: grey;
+}
+
+.item .info span + span:before {
+  content: " | ";
+  padding: 0 5px;
+}
+
+.item .info a {
+  text-decoration: none;
+  color: grey;
+}
+
+.item .info a:hover {
+  border-bottom: 1px grey dotted;
+}
+
+/* Nav  */
+
+nav {
+  height: 50px;
+  font-size: 15px;
+}
+
+nav li {
+  display: inline;
+}
+
+nav ul {
+  display: flex;
+  justify-content: center;
+  list-style-type: none;
+}
+
+nav a {
+  text-decoration: none;
+  color: black;
+}
+
+nav a:hover {
+  color: #477dca;
+}
+
+nav li + li:before {
+  content: " • ";
+  padding: 0 10px;
 }

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
 import { data } from "./api-response.js";
+import logo from "./img/logo-hn-search.webp";
 
 class App extends Component {
   constructor(props) {
@@ -30,9 +31,13 @@ class App extends Component {
 const Header = props => {
   return (
     <header>
-      <img src="#" alt="HN Search logo" />
+      <img className="logo" src={logo} alt="HN Search logo" />
       <h1>Search Hacker News</h1>
-      <input type="text" />
+      <input
+        className="search"
+        type="search"
+        placeholder="Search stories by title, url or author"
+      />
     </header>
   );
 };
@@ -40,14 +45,16 @@ const Header = props => {
 const Item = ({ item }) => {
   const { title, url, author, points, num_comments, created_at_i } = item;
   return (
-    <div>
+    <div className="item">
       <p>{title}</p>
-      <div>
-        <span>{points} points</span>&#124;
-        <span>{author}</span>&#124;
-        <span>{calcElapsedTime(created_at_i)}</span>&#124;
-        <span>{num_comments} comments</span>&#124;
-        <a href={url}>({url})</a>
+      <div className="info">
+        <span>{points} points</span>
+        <span>{author}</span>
+        <span>{calcElapsedTime(created_at_i)}</span>
+        <span>{num_comments} comments</span>
+        <span>
+          <a href={url}>({url})</a>
+        </span>
       </div>
     </div>
   );
