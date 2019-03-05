@@ -46,7 +46,9 @@ const Item = ({ item }) => {
   const { title, url, author, points, num_comments, created_at_i } = item;
   return (
     <div className="item">
-      <p>{title}</p>
+      <p>
+        <a href={url}>{title}</a>
+      </p>
       <div className="info">
         <span>{points} points</span>
         <span>{author}</span>
@@ -61,7 +63,33 @@ const Item = ({ item }) => {
 };
 
 const calcElapsedTime = dt => {
-  return "3 hours ago";
+  const now = new Date();
+  const date = new Date(dt * 1000);
+  let result;
+  const elapsedSec = Math.floor((now - date) / 1000);
+  if (elapsedSec < 60)
+    result = `${elapsedSec} second${elapsedSec === 1 ? "" : "s"} ago`;
+
+  const elapsedMin = Math.floor(elapsedSec / 60);
+  if (elapsedMin < 60)
+    result = `${elapsedMin} minute${elapsedMin === 1 ? "" : "s"} ago`;
+
+  const elapsedHours = Math.floor(elapsedMin / 60);
+  if (elapsedHours < 24)
+    result = `${elapsedHours} hour${elapsedHours === 1 ? "" : "s"} ago`;
+
+  const elapsedDays = Math.floor(elapsedHours / 24);
+  if (elapsedDays < 31)
+    result = `${elapsedDays} day${elapsedDays === 1 ? "" : "s"} ago`;
+
+  const elapsedMonths = Math.floor(elapsedDays / 31);
+  if (elapsedMonths < 12)
+    result = `${elapsedMonths} month${elapsedMonths === 1 ? "" : "s"} ago`;
+  else {
+    const elapsedYears = Math.floor(elapsedMonths / 12);
+    result = `${elapsedYears} year${elapsedYears === 1 ? "" : "s"} ago`;
+  }
+  return result;
 };
 
 const Nav = props => {
