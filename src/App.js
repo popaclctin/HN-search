@@ -8,19 +8,61 @@ class App extends Component {
     super(props);
     this.state = {
       data,
-      isLoading: false
+      isLoading: false,
+      searchValue: "",
+      searchOption: "",
+      byOption: "",
+      forOption: ""
     };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSelectChange = this.handleSelectChange.bind(this);
   }
 
   componentDidMount() {}
 
+  handleChange(event) {
+    this.setState({ searchValue: event.target.value });
+  }
+
+  handleSelectChange(event) {
+    switch (event.target.name) {
+      case "search": {
+        this.setState({ searchOption: event.target.value });
+        break;
+      }
+      case "by": {
+        this.setState({ searchBy: event.target.value });
+        break;
+      }
+      case "for": {
+        this.setState({ searchFor: event.target.value });
+        break;
+      }
+      default:
+        return;
+    }
+  }
+
   render() {
-    const { isLoading, data } = this.state;
+    const {
+      isLoading,
+      data,
+      searchValue,
+      searchOption,
+      byOption,
+      forOption
+    } = this.state;
     const hits = data ? data.hits : [];
     const list = hits.map(item => <Item key={item.objectID} item={item} />);
     return (
       <div className="App">
-        <Header />
+        <Header searchValue={searchValue} handleChange={this.handleChange} />
+        <SearchOptions
+          handleSelectChange={this.handleSelectChange}
+          searchOption={searchOption}
+          byOption={byOption}
+          forOption={forOption}
+        />
         <main>{!isLoading && list}</main>
         <Nav />
       </div>
@@ -28,7 +70,7 @@ class App extends Component {
   }
 }
 
-const Header = props => {
+const Header = ({ searchValue, handleChange }) => {
   return (
     <header>
       <img className="logo" src={logo} alt="HN Search logo" />
@@ -37,11 +79,61 @@ const Header = props => {
         className="search"
         type="search"
         placeholder="Search stories by title, url or author"
+        value={searchValue}
+        onChange={handleChange}
       />
     </header>
   );
 };
 
+const SearchOptions = ({
+  noResults,
+  fetchTime,
+  searchOption,
+  byOption,
+  forOption,
+  handleSelectChange
+}) => {
+  return (
+    <div className="searchOptions">
+      <div className="options">
+        <label>
+          Search
+          <select
+            name="search"
+            value={searchOption}
+            onChange={handleSelectChange}
+          >
+            <option value="All">All</option>
+            <option value="Stories">Stories</option>
+            <option value="Comments">Comments</option>
+          </select>
+        </label>
+        <label>
+          by
+          <select name="by" value={byOption} onChange={handleSelectChange}>
+            <option value="Popularity">Popularity</option>
+            <option value="Date">Date</option>
+          </select>
+        </label>
+        <label>
+          for
+          <select name="for" value={forOption} onChange={handleSelectChange}>
+            <option value="All time">All time</option>
+            <option value="Past 24h">Past 24h</option>
+            <option value="Past Week">Past Week</option>
+            <option value="Past Month">Past Month</option>
+            <option value="Past Year">Past Year</option>
+            <option value="Custom range">Custom range</option>
+          </select>
+        </label>
+      </div>
+      <div className="stats">
+        {noResults} results ({fetchTime} seconds)
+      </div>
+    </div>
+  );
+};
 const Item = ({ item }) => {
   const { title, url, author, points, num_comments, created_at_i } = item;
   return (

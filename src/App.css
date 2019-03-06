@@ -1,6 +1,7 @@
 .App {
   margin: 0 auto;
   width: 75%;
+  font-size: 16px;
 }
 
 /* Header */
@@ -13,7 +14,6 @@ header {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  font-size: 12px;
 }
 
 .search {
@@ -35,6 +35,18 @@ header h1 {
   max-width: 50px;
 }
 
+/* Search Options  */
+.searchOptions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  font-size: 15px;
+}
+
+.options select {
+  margin: 0 7px;
+}
 /* Main */
 
 main {
