@@ -52,7 +52,7 @@ const Item = ({ item }) => {
       <div className="info">
         <span>{points} points</span>
         <span>{author}</span>
-        <span>{calcElapsedTime(created_at_i)}</span>
+        <span>{timeAgo(Date.now() - created_at_i * 1000)}</span>
         <span>{num_comments} comments</span>
         <span>
           <a href={url}>({url})</a>
@@ -62,34 +62,59 @@ const Item = ({ item }) => {
   );
 };
 
-const calcElapsedTime = dt => {
-  const now = new Date();
-  const date = new Date(dt * 1000);
-  let result;
-  const elapsedSec = Math.floor((now - date) / 1000);
-  if (elapsedSec < 60)
-    result = `${elapsedSec} second${elapsedSec === 1 ? "" : "s"} ago`;
+const timeAgo = duration => {
+  let ago = Math.floor(duration / 1000);
+  let part = 0;
 
-  const elapsedMin = Math.floor(elapsedSec / 60);
-  if (elapsedMin < 60)
-    result = `${elapsedMin} minute${elapsedMin === 1 ? "" : "s"} ago`;
+  if (ago < 2) return "a moment ago";
+  if (ago < 60) return `${ago} seconds ago`;
 
-  const elapsedHours = Math.floor(elapsedMin / 60);
-  if (elapsedHours < 24)
-    result = `${elapsedHours} hour${elapsedHours === 1 ? "" : "s"} ago`;
-
-  const elapsedDays = Math.floor(elapsedHours / 24);
-  if (elapsedDays < 31)
-    result = `${elapsedDays} day${elapsedDays === 1 ? "" : "s"} ago`;
-
-  const elapsedMonths = Math.floor(elapsedDays / 31);
-  if (elapsedMonths < 12)
-    result = `${elapsedMonths} month${elapsedMonths === 1 ? "" : "s"} ago`;
-  else {
-    const elapsedYears = Math.floor(elapsedMonths / 12);
-    result = `${elapsedYears} year${elapsedYears === 1 ? "" : "s"} ago`;
+  if (ago < 120) return `a minute ago`;
+  if (ago < 3600) {
+    while (ago >= 60) {
+      ago -= 60;
+      part += 1;
+    }
+    return `${part} minutes ago`;
   }
-  return result;
+
+  if (ago < 7200) return `an hour ago`;
+  if (ago < 24 * 3600) {
+    while (ago >= 3600) {
+      ago -= 3600;
+      part += 1;
+    }
+    return `${part} hours ago`;
+  }
+
+  if (ago < 2 * 24 * 3600) return "a day ago";
+  if (ago < 30 * 24 * 3600) {
+    while (ago >= 24 * 3600) {
+      ago -= 24 * 3600;
+      part += 1;
+    }
+    return `${part} days ago`;
+  }
+
+  if (ago < 2 * 30 * 24 * 3600) return `a month ago`;
+  if (ago < 12 * 30 * 24 * 3600) {
+    while (ago >= 30 * 24 * 3600) {
+      ago -= 30 * 24 * 3600;
+      part += 1;
+    }
+    return `${part} months ago`;
+  }
+
+  if (ago < 2 * 12 * 30 * 24 * 3600) return `a year ago`;
+  if (ago < 39 * 12 * 30 * 24 * 3600) {
+    while (ago >= 12 * 30 * 24 * 3600) {
+      ago -= 12 * 30 * 24 * 3600;
+      part += 1;
+    }
+    return `${part} years ago`;
+  }
+
+  return "never";
 };
 
 const Nav = props => {
