@@ -51,6 +51,7 @@ header h1 {
 
 main {
   background-color: rgb(246, 246, 239);
+  padding: 10px;
 }
 
 .item {
@@ -118,26 +119,39 @@ nav li + li:before {
 /* Pages */
 
 .pages {
-  margin: 0 auto;
   list-style: none;
   display: flex;
   justify-content: center;
-  color: grey;
 }
 
-.pages li {
+.page {
   margin: 0 2px;
-  border: 1px solid grey;
 }
 
-.pages li div {
+.pages button {
   padding: 5px 10px;
+  width: 35px;
+  text-decoration: none;
+  border: 1px solid grey;
+  background-color: rgb(246, 246, 239);
+  color: grey;
+  border-radius: 4px;
 }
 
-.pages li:hover {
+.page button:hover {
   cursor: pointer;
 }
 
-.selected {
-  border: 1px solid red;
+.page .selected {
+  border-color: #ff7416;
+  color: #ff7416;
+}
+
+.page .disabled {
+  border-color: lightgray;
+  color: lightgray;
+}
+
+.page .disabled:hover {
+  cursor: not-allowed;
 }

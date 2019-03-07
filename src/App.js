@@ -224,20 +224,29 @@ const Pages = ({ nbPages, selected }) => {
     pages.push(<Page nb={i + 1} key={i} selected={selected === i} />);
   }
   if (pages.length > 10) {
-    const wtf = selected + 4 < nbPages - 1;
-    if (wtf) {
-      pages.splice(selected + 5, nbPages - 6 - selected, <Page />);
+    if (selected + 4 < nbPages - 1) {
+      pages.splice(
+        selected + 5,
+        nbPages - 6 - selected,
+        <Page nb="..." disabled="true" />
+      );
     }
-    if (selected - 5 > 0) pages.splice(1, selected - 6, <Page />);
+    if (selected - 5 > 0)
+      pages.splice(1, selected - 6, <Page nb="..." disabled="true" />);
   }
   return <ul className="pages">{pages}</ul>;
 };
 
-const Page = ({ nb = "...", selected }) => {
-  const pageClass = classNames("page", { selected: selected });
+const Page = ({ nb, selected, disabled }) => {
+  const buttonClass = classNames(
+    { selected: selected },
+    { disabled: disabled }
+  );
   return (
-    <li className={pageClass}>
-      <div>{nb}</div>
+    <li className="page">
+      <button disabled={disabled} className={buttonClass}>
+        {nb}
+      </button>
     </li>
   );
 };
