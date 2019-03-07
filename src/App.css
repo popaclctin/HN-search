@@ -114,3 +114,30 @@ nav li + li:before {
   content: " • ";
   padding: 0 10px;
 }
+
+/* Pages */
+
+.pages {
+  margin: 0 auto;
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  color: grey;
+}
+
+.pages li {
+  margin: 0 2px;
+  border: 1px solid grey;
+}
+
+.pages li div {
+  padding: 5px 10px;
+}
+
+.pages li:hover {
+  cursor: pointer;
+}
+
+.selected {
+  border: 1px solid red;
+}

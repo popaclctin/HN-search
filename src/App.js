@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./App.css";
 import { data } from "./api-response.js";
 import logo from "./img/logo-hn-search.webp";
+import classNames from "classnames";
 
 class App extends Component {
   constructor(props) {
@@ -63,8 +64,13 @@ class App extends Component {
           searchOption={searchOption}
           byOption={byOption}
           forOption={forOption}
+          nbResults={data.nbHits}
+          fetchTime={data.processingTimeMS / 1000}
         />
-        <main>{!isLoading && list}</main>
+        <main>
+          {!isLoading && list}
+          <Pages nbPages="20" selected="6" />
+        </main>
         <Nav />
       </div>
     );
@@ -88,7 +94,7 @@ const Header = ({ searchValue, handleChange }) => {
 };
 
 const SearchOptions = ({
-  noResults,
+  nbResults,
   fetchTime,
   searchOption,
   byOption,
@@ -130,7 +136,7 @@ const SearchOptions = ({
         </label>
       </div>
       <div className="stats">
-        {noResults} results ({fetchTime} seconds)
+        {nbResults} results ({fetchTime} seconds)
       </div>
     </div>
   );
@@ -208,6 +214,32 @@ const timeAgo = duration => {
   }
 
   return "never";
+};
+
+const Pages = ({ nbPages, selected }) => {
+  nbPages = parseInt(nbPages);
+  selected = parseInt(selected);
+  let pages = [];
+  for (let i = 0; i < nbPages; i++) {
+    pages.push(<Page nb={i + 1} key={i} selected={selected === i} />);
+  }
+  if (pages.length > 10) {
+    const wtf = selected + 4 < nbPages - 1;
+    if (wtf) {
+      pages.splice(selected + 5, nbPages - 6 - selected, <Page />);
+    }
+    if (selected - 5 > 0) pages.splice(1, selected - 6, <Page />);
+  }
+  return <ul className="pages">{pages}</ul>;
+};
+
+const Page = ({ nb = "...", selected }) => {
+  const pageClass = classNames("page", { selected: selected });
+  return (
+    <li className={pageClass}>
+      <div>{nb}</div>
+    </li>
+  );
 };
 
 const Nav = props => {
