@@ -10,7 +10,7 @@ class App extends Component {
       data,
       isLoading: false,
       searchValue: "",
-      searchOption: "",
+      searchOption: "Stories",
       byOption: "",
       forOption: ""
     };
@@ -25,17 +25,18 @@ class App extends Component {
   }
 
   handleSelectChange(event) {
+    console.log(event.target.value);
     switch (event.target.name) {
       case "search": {
         this.setState({ searchOption: event.target.value });
         break;
       }
       case "by": {
-        this.setState({ searchBy: event.target.value });
+        this.setState({ byOption: event.target.value });
         break;
       }
       case "for": {
-        this.setState({ searchFor: event.target.value });
+        this.setState({ forOption: event.target.value });
         break;
       }
       default:
