@@ -4,6 +4,11 @@ import { data } from "./api-response.js";
 import logo from "./img/logo-hn-search.webp";
 import classNames from "classnames";
 
+const PATH_BASE = "https://hn.algolia.com/api/v1/";
+const PARAM_SEARCH = "query=";
+const PARAM_TAGS = "tags=";
+const PARAM_FILTERS = "numericFilters=";
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -11,15 +16,38 @@ class App extends Component {
       data,
       isLoading: false,
       searchValue: "",
-      searchOption: "Stories",
-      byOption: "",
-      forOption: ""
+      searchOption: "story",
+      byOption: "search",
+      forOption: "",
+      searchTerm: "",
+      error: null,
+      page: 0
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    const { searchTerm, searchOption, byOption, forOption, page } = this.state;
+    this.fetchData(byOption, searchOption, forOption, searchTerm, page);
+  }
+
+  setData(data) {
+    this.setState({ data, isLoading: false });
+  }
+
+  fetchData(byOption, searchOption, forOption, searchTerm, page = 0) {
+    const dateFilter = forOption
+      ? `created_at_i>${Math.floor(Date.now() / 1000) - forOption}`
+      : "";
+    this.setState({ isLoading: true });
+    fetch(
+      `${PATH_BASE}${byOption}?${PARAM_SEARCH}${searchTerm}&${PARAM_TAGS}${searchOption}&${PARAM_FILTERS}${dateFilter}`
+    )
+      .then(response => response.json())
+      .then(result => this.setData(result))
+      .catch(error => this.setState({ error }));
+  }
 
   handleChange(event) {
     this.setState({ searchValue: event.target.value });
@@ -69,7 +97,7 @@ class App extends Component {
         />
         <main>
           {!isLoading && list}
-          <Pages nbPages="20" selected="6" />
+          <Pages nbPages={data.nbPages} selected={data.page} />
         </main>
         <Nav />
       </div>
@@ -111,27 +139,26 @@ const SearchOptions = ({
             value={searchOption}
             onChange={handleSelectChange}
           >
-            <option value="All">All</option>
-            <option value="Stories">Stories</option>
-            <option value="Comments">Comments</option>
+            <option value="">All</option>
+            <option value="story">Stories</option>
+            <option value="comment">Comments</option>
           </select>
         </label>
         <label>
           by
           <select name="by" value={byOption} onChange={handleSelectChange}>
-            <option value="Popularity">Popularity</option>
-            <option value="Date">Date</option>
+            <option value="search">Popularity</option>
+            <option value="search_by_date">Date</option>
           </select>
         </label>
         <label>
           for
           <select name="for" value={forOption} onChange={handleSelectChange}>
-            <option value="All time">All time</option>
-            <option value="Past 24h">Past 24h</option>
-            <option value="Past Week">Past Week</option>
-            <option value="Past Month">Past Month</option>
-            <option value="Past Year">Past Year</option>
-            <option value="Custom range">Custom range</option>
+            <option value="">All time</option>
+            <option value="86400">Past 24h</option>
+            <option value="604800">Past Week</option>
+            <option value="18144000">Past Month</option>
+            <option value="217728000">Past Year</option>
           </select>
         </label>
       </div>
@@ -221,31 +248,38 @@ const Pages = ({ nbPages, selected }) => {
   selected = parseInt(selected);
   let pages = [];
   for (let i = 0; i < nbPages; i++) {
-    pages.push(<Page nb={i + 1} key={i} selected={selected === i} />);
+    pages.push(<Page value={i + 1} key={i} selected={selected === i} />);
   }
   if (pages.length > 10) {
     if (selected + 4 < nbPages - 1) {
       pages.splice(
         selected + 5,
         nbPages - 6 - selected,
-        <Page nb="..." disabled="true" />
+        <Page value="..." disabled="true" />
       );
     }
     if (selected - 5 > 0)
-      pages.splice(1, selected - 6, <Page nb="..." disabled="true" />);
+      pages.splice(1, selected - 6, <Page value="..." disabled="true" />);
   }
-  return <ul className="pages">{pages}</ul>;
+  return (
+    <ul className="pages">
+      {selected !== 0 && <Page value="<<" />}
+      {pages}
+      {selected !== nbPages - 1 && <Page value=">>" />}
+    </ul>
+  );
 };
 
-const Page = ({ nb, selected, disabled }) => {
+//de adaugat onClick
+const Page = ({ value, selected, disabled, onClick }) => {
   const buttonClass = classNames(
     { selected: selected },
     { disabled: disabled }
   );
   return (
     <li className="page">
-      <button disabled={disabled} className={buttonClass}>
-        {nb}
+      <button disabled={disabled} className={buttonClass} onClick={onClick}>
+        {value}
       </button>
     </li>
   );
