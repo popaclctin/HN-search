@@ -8,6 +8,7 @@ const PATH_BASE = "https://hn.algolia.com/api/v1/";
 const PARAM_SEARCH = "query=";
 const PARAM_TAGS = "tags=";
 const PARAM_FILTERS = "numericFilters=";
+const PARAM_PAGE = "page=";
 
 class App extends Component {
   constructor(props) {
@@ -25,24 +26,27 @@ class App extends Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
+    this.fetchData = this.fetchData.bind(this);
   }
 
   componentDidMount() {
-    const { searchTerm, searchOption, byOption, forOption, page } = this.state;
-    this.fetchData(byOption, searchOption, forOption, searchTerm, page);
+    const { searchTerm } = this.state;
+    this.fetchData(searchTerm);
   }
 
   setData(data) {
     this.setState({ data, isLoading: false });
   }
 
-  fetchData(byOption, searchOption, forOption, searchTerm, page = 0) {
+  fetchData(searchTerm, page = 0) {
+    const { searchOption, byOption, forOption } = this.state;
     const dateFilter = forOption
       ? `created_at_i>${Math.floor(Date.now() / 1000) - forOption}`
       : "";
     this.setState({ isLoading: true });
     fetch(
-      `${PATH_BASE}${byOption}?${PARAM_SEARCH}${searchTerm}&${PARAM_TAGS}${searchOption}&${PARAM_FILTERS}${dateFilter}`
+      `${PATH_BASE}${byOption}?${PARAM_SEARCH}${searchTerm}&${PARAM_TAGS}${searchOption}&${PARAM_FILTERS}${dateFilter}
+      &${PARAM_PAGE}${page}`
     )
       .then(response => response.json())
       .then(result => this.setData(result))
@@ -77,6 +81,7 @@ class App extends Component {
     const {
       isLoading,
       data,
+      searchTerm,
       searchValue,
       searchOption,
       byOption,
@@ -97,7 +102,12 @@ class App extends Component {
         />
         <main>
           {!isLoading && list}
-          <Pages nbPages={data.nbPages} selected={data.page} />
+          <Pages
+            nbPages={data.nbPages}
+            selected={data.page}
+            onClick={this.fetchData}
+            searchTerm={searchTerm}
+          />
         </main>
         <Nav />
       </div>
@@ -243,12 +253,20 @@ const timeAgo = duration => {
   return "never";
 };
 
-const Pages = ({ nbPages, selected }) => {
+const Pages = ({ nbPages, selected, onClick, searchTerm }) => {
   nbPages = parseInt(nbPages);
   selected = parseInt(selected);
   let pages = [];
   for (let i = 0; i < nbPages; i++) {
-    pages.push(<Page value={i + 1} key={i} selected={selected === i} />);
+    pages.push(
+      <Page
+        value={i + 1}
+        key={i}
+        selected={selected === i}
+        onClick={onClick}
+        searchTerm={searchTerm}
+      />
+    );
   }
   if (pages.length > 10) {
     if (selected + 4 < nbPages - 1) {
@@ -271,14 +289,18 @@ const Pages = ({ nbPages, selected }) => {
 };
 
 //de adaugat onClick
-const Page = ({ value, selected, disabled, onClick }) => {
+const Page = ({ value, selected, disabled, onClick, searchTerm }) => {
   const buttonClass = classNames(
     { selected: selected },
     { disabled: disabled }
   );
   return (
     <li className="page">
-      <button disabled={disabled} className={buttonClass} onClick={onClick}>
+      <button
+        disabled={disabled}
+        className={buttonClass}
+        onClick={() => onClick(searchTerm, value - 1)}
+      >
         {value}
       </button>
     </li>
