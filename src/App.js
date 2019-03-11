@@ -41,12 +41,14 @@ class App extends Component {
   fetchData(searchTerm, page = 0) {
     const { searchOption, byOption, forOption } = this.state;
     const dateFilter = forOption
-      ? `created_at_i>${Math.floor(Date.now() / 1000) - forOption}`
+      ? `created_at_i>${Math.floor((Date.now() - forOption * 1000) / 1000)}`
       : "";
     this.setState({ isLoading: true });
+    console.log(
+      `${PATH_BASE}${byOption}?${PARAM_SEARCH}${searchTerm}&${PARAM_TAGS}${searchOption}&${PARAM_FILTERS}${dateFilter}&${PARAM_PAGE}${page}`
+    );
     fetch(
-      `${PATH_BASE}${byOption}?${PARAM_SEARCH}${searchTerm}&${PARAM_TAGS}${searchOption}&${PARAM_FILTERS}${dateFilter}
-      &${PARAM_PAGE}${page}`
+      `${PATH_BASE}${byOption}?${PARAM_SEARCH}${searchTerm}&${PARAM_TAGS}${searchOption}&${PARAM_FILTERS}${dateFilter}&${PARAM_PAGE}${page}`
     )
       .then(response => response.json())
       .then(result => this.setData(result))
@@ -54,11 +56,12 @@ class App extends Component {
   }
 
   handleChange(event) {
-    this.setState({ searchValue: event.target.value });
+    const searchTerm = event.target.value;
+    this.setState({ searchTerm });
+    this.fetchData(searchTerm);
   }
 
   handleSelectChange(event) {
-    console.log(event.target.value);
     switch (event.target.name) {
       case "search": {
         this.setState({ searchOption: event.target.value });
@@ -75,6 +78,7 @@ class App extends Component {
       default:
         return;
     }
+    this.fetchData(this.state.searchTerm);
   }
 
   render() {
@@ -82,7 +86,6 @@ class App extends Component {
       isLoading,
       data,
       searchTerm,
-      searchValue,
       searchOption,
       byOption,
       forOption
@@ -91,7 +94,7 @@ class App extends Component {
     const list = hits.map(item => <Item key={item.objectID} item={item} />);
     return (
       <div className="App">
-        <Header searchValue={searchValue} handleChange={this.handleChange} />
+        <Header searchValue={searchTerm} handleChange={this.handleChange} />
         <SearchOptions
           handleSelectChange={this.handleSelectChange}
           searchOption={searchOption}
@@ -312,28 +315,28 @@ const Nav = props => {
     <nav>
       <ul>
         <li>
-          <a href="#">About</a>
+          <a href="www.example.com">About</a>
         </li>
         <li>
-          <a href="#">Settings</a>
+          <a href="www.example.com">Settings</a>
         </li>
         <li>
-          <a href="#">Help</a>
+          <a href="www.example.com">Help</a>
         </li>
         <li>
-          <a href="#">API</a>
+          <a href="www.example.com">API</a>
         </li>
         <li>
-          <a href="#">Hacker News</a>
+          <a href="www.example.com">Hacker News</a>
         </li>
         <li>
-          <a href="#">Fork/Contribute</a>
+          <a href="www.example.com">Fork/Contribute</a>
         </li>
         <li>
-          <a href="#">Status</a>
+          <a href="www.example.com">Status</a>
         </li>
         <li>
-          <a href="#">Cool apps</a>
+          <a href="www.example.com">Cool apps</a>
         </li>
       </ul>
     </nav>
