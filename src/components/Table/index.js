@@ -1,13 +1,13 @@
 import React from "react";
 import "./index.css";
-import ReactPaginate from "react-paginate";
+import classNames from "classnames";
 
 const Table = ({ list, ...rest }) => {
   const result = list.map(item => <Item key={item.objectID} item={item} />);
   return (
     <div>
       {result}
-      <Pageination nbPages={list.length} {...rest} />
+      <Pagination nbPages={list.length} {...rest} />
     </div>
   );
 };
@@ -32,20 +32,13 @@ const Item = ({ item }) => {
   );
 };
 
-//nu cred ca am nevoie de searchTerm. Vezi daca poti modifica handler fara acest parametru
-const Pagination = ({ nbPages, selected, onClick, searchTerm }) => {
+const Pagination = ({ nbPages, selected, onClick }) => {
   nbPages = parseInt(nbPages);
   selected = parseInt(selected);
   let pages = [];
   for (let i = 0; i < nbPages; i++) {
     pages.push(
-      <Page
-        value={i + 1}
-        key={i}
-        selected={selected === i}
-        onClick={onClick}
-        searchTerm={searchTerm}
-      />
+      <Page value={i + 1} key={i} selected={selected === i} onClick={onClick} />
     );
   }
   if (pages.length > 10) {
@@ -78,7 +71,7 @@ const Page = ({ value, selected, disabled, onClick, searchTerm }) => {
       <button
         disabled={disabled}
         className={buttonClass}
-        onClick={() => onClick(searchTerm, value - 1)}
+        onClick={() => onClick(value - 1)}
       >
         {value}
       </button>
@@ -140,3 +133,5 @@ const timeAgo = duration => {
 
   return "never";
 };
+
+export default Table;

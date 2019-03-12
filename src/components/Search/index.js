@@ -1,6 +1,6 @@
 import React from "react";
 import "./index.css";
-import logo from "../img/logo-hn-search.webp";
+import logo from "../../img/logo-hn-search.webp";
 
 const Search = ({
   searchValue,

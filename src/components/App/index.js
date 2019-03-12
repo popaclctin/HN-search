@@ -1,13 +1,20 @@
 import React, { Component } from "react";
-import Search from "Search";
+import Search from "../Search";
+import Table from "../Table";
 import "./index.css";
-import classNames from "classnames";
+import {
+  PATH_BASE,
+  PARAM_SEARCH,
+  PARAM_TAGS,
+  PARAM_FILTERS,
+  PARAM_PAGE
+} from "../../constants";
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data,
+      data: null,
       isLoading: false,
       searchValue: "",
       searchOpt: "story",
@@ -19,27 +26,23 @@ class App extends Component {
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
-    this.fetchData = this.fetchData.bind(this);
+    this.handlePageClick = this.handlePageClick.bind(this);
   }
 
   componentDidMount() {
-    const { searchTerm } = this.state;
-    this.fetchData(searchTerm);
+    this.fetchData();
   }
 
   setData(data) {
     this.setState({ data, isLoading: false });
   }
 
-  fetchData(searchTerm, page = 0) {
-    const { searchOpt, byOpt, forOpt } = this.state;
+  fetchData(page = 0) {
+    const { searchTerm, searchOpt, byOpt, forOpt } = this.state;
     const dateFilter = forOpt
       ? `created_at_i>${Math.floor((Date.now() - forOpt * 1000) / 1000)}`
       : "";
     this.setState({ isLoading: true });
-    console.log(
-      `${PATH_BASE}${byOpt}?${PARAM_SEARCH}${searchTerm}&${PARAM_TAGS}${searchOpt}&${PARAM_FILTERS}${dateFilter}&${PARAM_PAGE}${page}`
-    );
     fetch(
       `${PATH_BASE}${byOpt}?${PARAM_SEARCH}${searchTerm}&${PARAM_TAGS}${searchOpt}&${PARAM_FILTERS}${dateFilter}&${PARAM_PAGE}${page}`
     )
@@ -49,9 +52,8 @@ class App extends Component {
   }
 
   handleInputChange(event) {
-    const searchTerm = event.target.value;
-    this.setState({ searchTerm });
-    this.fetchData(searchTerm);
+    this.setState({ searchTerm: event.target.value });
+    this.fetchData();
   }
 
   handleSelectChange(event) {
@@ -71,42 +73,30 @@ class App extends Component {
       default:
         return;
     }
-    this.fetchData(this.state.searchTerm);
+    this.fetchData();
+  }
+
+  handlePageClick(page) {
+    this.setState({ page });
+    this.fetchData(page);
   }
 
   render() {
-    const {
-      isLoading,
-      data,
-      searchTerm,
-      searchOpt,
-      byOpt,
-      forOpt
-    } = this.state;
+    const { data, searchTerm, searchOpt, byOpt, forOpt, page } = this.state;
     const hits = data ? data.hits : [];
-    const list = hits.map(item => <Item key={item.objectID} item={item} />);
     return (
       <div className="App">
         <Search
           searchValue={searchTerm}
           handleInputChange={this.handleInputChange}
-          nbResults={data.nbHits}
-          fetchTime={data.processingTimeMS / 1000}
+          nbResults={data && data.nbHits}
+          fetchTime={data && data.processingTimeMS / 1000}
           searchOpt={searchOpt}
           byOpt={byOpt}
           forOpt={forOpt}
-          handleSelectChange={handleSelectChange}
+          handleSelectChange={this.handleSelectChange}
         />
-        <main>
-          {!isLoading && list}
-          <Pages
-            nbPages={data.nbPages}
-            selected={data.page}
-            onClick={this.fetchData}
-            searchTerm={searchTerm}
-          />
-        </main>
-        <Nav />
+        <Table list={hits} selected={page} onClick={this.handlePageClick} />
       </div>
     );
   }
