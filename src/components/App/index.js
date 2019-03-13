@@ -33,56 +33,56 @@ class App extends Component {
     this.fetchData();
   }
 
-  setData(data) {
-    this.setState({ data, isLoading: false });
-  }
-
   fetchData(page = 0) {
     const { searchTerm, searchOpt, byOpt, forOpt } = this.state;
-    const dateFilter = forOpt
-      ? `created_at_i>${Math.floor((Date.now() - forOpt * 1000) / 1000)}`
-      : "";
+    let url = PATH_BASE;
+    url = url.concat(byOpt, "?");
+    if (searchTerm) {
+      url = url.concat(PARAM_SEARCH, searchTerm, "&");
+    }
+    if (searchOpt) {
+      url = url.concat(PARAM_TAGS, searchOpt, "&");
+    }
+    if (forOpt) {
+      url = url.concat(
+        PARAM_FILTERS,
+        `created_at_i>${Math.floor((Date.now() - forOpt * 1000) / 1000)}`,
+        "&"
+      );
+    }
+    url = url.concat(PARAM_PAGE, page);
     this.setState({ isLoading: true });
-    fetch(
-      `${PATH_BASE}${byOpt}?${PARAM_SEARCH}${searchTerm}&${PARAM_TAGS}${searchOpt}&${PARAM_FILTERS}${dateFilter}&${PARAM_PAGE}${page}`
-    )
+    console.log(url);
+    fetch(url)
       .then(response => response.json())
-      .then(result => this.setData(result))
+      .then(result => this.setState({ data: result, isLoading: false }))
       .catch(error => this.setState({ error }));
   }
 
   handleInputChange(event) {
-    this.setState({ searchTerm: event.target.value });
-    this.fetchData();
+    this.setState({ searchTerm: event.target.value }, this.fetchData());
   }
 
   handleSelectChange(event) {
-    switch (event.target.name) {
-      case "search": {
-        this.setState({ searchOpt: event.target.value });
-        break;
-      }
-      case "by": {
-        this.setState({ byOpt: event.target.value });
-        break;
-      }
-      case "for": {
-        this.setState({ forOpt: event.target.value });
-        break;
-      }
-      default:
-        return;
-    }
-    this.fetchData();
+    const { name, value } = event.target;
+    this.setState({ [name]: value }, this.fetchData());
   }
 
   handlePageClick(page) {
-    this.setState({ page });
-    this.fetchData(page);
+    this.setState({ page }, this.fetchData(page));
   }
 
   render() {
-    const { data, searchTerm, searchOpt, byOpt, forOpt, page } = this.state;
+    const {
+      data,
+      searchTerm,
+      searchOpt,
+      byOpt,
+      forOpt,
+      page,
+      isLoading,
+      error
+    } = this.state;
     const hits = data ? data.hits : [];
     return (
       <div className="App">
@@ -96,7 +96,10 @@ class App extends Component {
           forOpt={forOpt}
           handleSelectChange={this.handleSelectChange}
         />
-        <Table list={hits} selected={page} onClick={this.handlePageClick} />
+        {!isLoading && (
+          <Table list={hits} selected={page} onClick={this.handlePageClick} />
+        )}
+        {error && <div>{error}</div>}
       </div>
     );
   }

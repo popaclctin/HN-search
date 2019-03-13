@@ -46,11 +46,11 @@ const Pagination = ({ nbPages, selected, onClick }) => {
       pages.splice(
         selected + 5,
         nbPages - 6 - selected,
-        <Page value="..." disabled="true" />
+        <Page value="..." disabled={true} />
       );
     }
     if (selected - 5 > 0)
-      pages.splice(1, selected - 6, <Page value="..." disabled="true" />);
+      pages.splice(1, selected - 6, <Page value="..." disabled={true} />);
   }
   return (
     <ul className="pages">
