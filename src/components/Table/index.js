@@ -5,7 +5,7 @@ import classNames from "classnames";
 const Table = ({ list, ...rest }) => {
   const result = list.map(item => <Item key={item.objectID} item={item} />);
   return (
-    <div>
+    <div className="table">
       {result}
       <Pagination nbPages={list.length} {...rest} />
     </div>
@@ -52,6 +52,7 @@ const Pagination = ({ nbPages, selected, onClick }) => {
     if (selected - 5 > 0)
       pages.splice(1, selected - 6, <Page value="..." disabled={true} />);
   }
+  //de adaugat onClick pt << si >>
   return (
     <ul className="pages">
       {selected !== 0 && <Page value="<<" />}
@@ -61,7 +62,7 @@ const Pagination = ({ nbPages, selected, onClick }) => {
   );
 };
 
-const Page = ({ value, selected, disabled, onClick, searchTerm }) => {
+const Page = ({ value, selected, disabled, onClick }) => {
   const buttonClass = classNames(
     { selected: selected },
     { disabled: disabled }

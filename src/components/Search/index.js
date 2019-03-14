@@ -10,18 +10,18 @@ const Search = ({
   ...rest
 }) => {
   return (
-    <header>
-      <div>
+    <header className="search">
+      <div className="headerInput">
         <img src={logo} alt="HN Search logo" />
         <h1>Search Hacker News</h1>
         <input
           type="search"
           placeholder="Search stories by title, url or author"
           value={searchValue}
-          onInput={handleInputChange}
+          onChange={handleInputChange}
         />
       </div>
-      <div>
+      <div className="searchOpt">
         <SearchOptions {...rest} />
         <div className="stats">
           {nbResults} results ({fetchTime} seconds)

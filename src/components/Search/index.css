@@ -1,0 +1,45 @@
+.search {
+}
+
+.headerInput {
+  align-items: center;
+  background-color: #ff7416;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.headerInput img {
+  max-width: 50px;
+}
+
+.headerInput h1 {
+  margin: 0 10px;
+  font-size: 24px;
+}
+
+.headerInput input[type="search"] {
+  background-image: url(../../img/iconfinder-icon.svg);
+  background-repeat: no-repeat;
+  background-position: left;
+  border: 0;
+  flex: 3;
+  height: 50px;
+  outline: none;
+  padding-left: 35px;
+}
+
+.searchOpt {
+  align-items: center;
+  display: flex;
+  font-size: 15px;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.searchOpt .options select {
+  margin: 0 7px;
+  padding: 3px;
+}

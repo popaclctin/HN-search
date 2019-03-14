@@ -1,0 +1,12 @@
+.app {
+  margin: 0 auto;
+  width: 80%;
+}
+
+.app ul {
+  list-style-type: none;
+}
+
+.app a {
+  text-decoration: none;
+}

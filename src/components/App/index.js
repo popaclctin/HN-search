@@ -68,7 +68,6 @@ class App extends Component {
     this.setState({ [name]: value }, this.fetchData);
   }
 
-  //de modificat
   handlePageClick(page) {
     this.setState({ page }, () => this.fetchData(page));
   }
@@ -86,7 +85,7 @@ class App extends Component {
     } = this.state;
     const hits = data ? data.hits : [];
     return (
-      <div className="App">
+      <div className="app">
         <Search
           searchValue={searchTerm}
           handleInputChange={this.handleInputChange}
