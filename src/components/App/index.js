@@ -17,9 +17,9 @@ class App extends Component {
       data: null,
       isLoading: false,
       searchValue: "",
-      searchOpt: "story",
-      byOpt: "search",
-      forOpt: "",
+      optSearch: "story",
+      optBy: "search",
+      optFor: "",
       searchTerm: "",
       error: null,
       page: 0
@@ -34,24 +34,24 @@ class App extends Component {
   }
 
   fetchData(page = 0) {
-    const { searchTerm, searchOpt, byOpt, forOpt } = this.state;
+    this.setState({ isLoading: true });
+    const { searchTerm, optSearch, optBy, optFor } = this.state;
     let url = PATH_BASE;
-    url = url.concat(byOpt, "?");
+    url = url.concat(optBy, "?");
     if (searchTerm) {
       url = url.concat(PARAM_SEARCH, searchTerm, "&");
     }
-    if (searchOpt) {
-      url = url.concat(PARAM_TAGS, searchOpt, "&");
+    if (optSearch) {
+      url = url.concat(PARAM_TAGS, optSearch, "&");
     }
-    if (forOpt) {
+    if (optFor) {
       url = url.concat(
         PARAM_FILTERS,
-        `created_at_i>${Math.floor((Date.now() - forOpt * 1000) / 1000)}`,
+        `created_at_i>${Math.floor((Date.now() - optFor * 1000) / 1000)}`,
         "&"
       );
     }
     url = url.concat(PARAM_PAGE, page);
-    this.setState({ isLoading: true });
     console.log(url);
     fetch(url)
       .then(response => response.json())
@@ -60,25 +60,26 @@ class App extends Component {
   }
 
   handleInputChange(event) {
-    this.setState({ searchTerm: event.target.value }, this.fetchData());
+    this.setState({ searchTerm: event.target.value }, this.fetchData);
   }
 
   handleSelectChange(event) {
     const { name, value } = event.target;
-    this.setState({ [name]: value }, this.fetchData());
+    this.setState({ [name]: value }, this.fetchData);
   }
 
+  //de modificat
   handlePageClick(page) {
-    this.setState({ page }, this.fetchData(page));
+    this.setState({ page }, () => this.fetchData(page));
   }
 
   render() {
     const {
       data,
       searchTerm,
-      searchOpt,
-      byOpt,
-      forOpt,
+      optSearch,
+      optBy,
+      optFor,
       page,
       isLoading,
       error
@@ -91,9 +92,9 @@ class App extends Component {
           handleInputChange={this.handleInputChange}
           nbResults={data && data.nbHits}
           fetchTime={data && data.processingTimeMS / 1000}
-          searchOpt={searchOpt}
-          byOpt={byOpt}
-          forOpt={forOpt}
+          optSearch={optSearch}
+          optBy={optBy}
+          optFor={optFor}
           handleSelectChange={this.handleSelectChange}
         />
         {!isLoading && (

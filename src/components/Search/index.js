@@ -18,7 +18,7 @@ const Search = ({
           type="search"
           placeholder="Search stories by title, url or author"
           value={searchValue}
-          onChange={handleInputChange}
+          onInput={handleInputChange}
         />
       </div>
       <div>
@@ -31,12 +31,16 @@ const Search = ({
   );
 };
 
-const SearchOptions = ({ searchOpt, byOpt, forOpt, handleSelectChange }) => {
+const SearchOptions = ({ optSearch, optBy, optFor, handleSelectChange }) => {
   return (
     <div className="options">
       <label>
         Search
-        <select name="search" value={searchOpt} onChange={handleSelectChange}>
+        <select
+          name="optSearch"
+          value={optSearch}
+          onChange={handleSelectChange}
+        >
           <option value="">All</option>
           <option value="story">Stories</option>
           <option value="comment">Comments</option>
@@ -44,19 +48,19 @@ const SearchOptions = ({ searchOpt, byOpt, forOpt, handleSelectChange }) => {
       </label>
       <label>
         by
-        <select name="by" value={byOpt} onChange={handleSelectChange}>
+        <select name="optBy" value={optBy} onChange={handleSelectChange}>
           <option value="search">Popularity</option>
           <option value="search_by_date">Date</option>
         </select>
       </label>
       <label>
         for
-        <select name="for" value={forOpt} onChange={handleSelectChange}>
+        <select name="optFor" value={optFor} onChange={handleSelectChange}>
           <option value="">All time</option>
           <option value="86400">Past 24h</option>
           <option value="604800">Past Week</option>
-          <option value="18144000">Past Month</option>
-          <option value="217728000">Past Year</option>
+          <option value="2419200">Past Month</option>
+          <option value="29030400">Past Year</option>
         </select>
       </label>
     </div>
