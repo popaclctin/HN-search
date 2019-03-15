@@ -55,7 +55,7 @@ class App extends Component {
     console.log(url);
     fetch(url)
       .then(response => response.json())
-      .then(result => this.setState({ data: result, isLoading: false }))
+      .then(result => this.setState({ data: result, isLoading: false, page }))
       .catch(error => this.setState({ error }));
   }
 

@@ -55,9 +55,13 @@ const Pagination = ({ nbPages, selected, onClick }) => {
   //de adaugat onClick pt << si >>
   return (
     <ul className="pages">
-      {selected !== 0 && <Page value="<<" />}
+      {selected !== 0 && (
+        <Page value="<<" onClick={() => onClick(selected - 1)} />
+      )}
       {pages}
-      {selected !== nbPages - 1 && <Page value=">>" />}
+      {selected !== nbPages - 1 && (
+        <Page value=">>" onClick={() => onClick(selected + 1)} />
+      )}
     </ul>
   );
 };
