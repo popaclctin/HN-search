@@ -13,7 +13,15 @@ const Table = ({ list, ...rest }) => {
 };
 
 const Item = ({ item }) => {
-  const { title, url, author, points, num_comments, created_at_i } = item;
+  const {
+    title,
+    url,
+    author,
+    points,
+    num_comments,
+    created_at_i,
+    comment_text
+  } = item;
   return (
     <div className="item">
       <h2>
@@ -24,10 +32,13 @@ const Item = ({ item }) => {
         <li>{author}</li>
         <li>{timeAgo(Date.now() - created_at_i * 1000)}</li>
         <li>{num_comments} comments</li>
-        <li>
-          <a href={url}>({url})</a>
-        </li>
+        {url && (
+          <li>
+            <a href={url}>({url})</a>
+          </li>
+        )}
       </ul>
+      <div className="comment">{comment_text}</div>
     </div>
   );
 };
@@ -52,7 +63,7 @@ const Pagination = ({ nbPages, selected, onClick }) => {
     if (selected - 5 > 0)
       pages.splice(1, selected - 6, <Page value="..." disabled={true} />);
   }
-  //de adaugat onClick pt << si >>
+
   return (
     <ul className="pages">
       {selected !== 0 && (
