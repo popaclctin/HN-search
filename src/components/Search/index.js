@@ -1,6 +1,7 @@
 import React from "react";
 import "./index.css";
 import logo from "../../img/logo-hn-search.webp";
+import { Link } from "react-router-dom";
 
 const Search = ({
   searchValue,
@@ -12,8 +13,12 @@ const Search = ({
   return (
     <header className="search">
       <div className="headerInput">
-        <img src={logo} alt="HN Search logo" />
-        <h1>Search Hacker News</h1>
+        <Link to="/">
+          <img src={logo} alt="HN Search logo" />
+        </Link>
+        <Link to="/">
+          <h1>Search Hacker News</h1>
+        </Link>
         <input
           type="search"
           placeholder="Search stories by title, url or author"
