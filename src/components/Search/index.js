@@ -29,7 +29,7 @@ const Search = ({
       <div className="searchOpt">
         <SearchOptions {...rest} />
         <div className="stats">
-          {nbResults} results ({fetchTime} seconds)
+          {nbResults && formatNumber(nbResults)} results ({fetchTime} seconds)
         </div>
       </div>
     </header>
@@ -71,5 +71,9 @@ const SearchOptions = ({ optSearch, optBy, optFor, handleSelectChange }) => {
     </div>
   );
 };
+
+function formatNumber(num) {
+  return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+}
 
 export default Search;
