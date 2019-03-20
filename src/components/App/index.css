@@ -10,3 +10,8 @@
 .app a {
   text-decoration: none;
 }
+
+.spinner {
+  color: grey;
+  text-align: center;
+}

@@ -9,6 +9,8 @@ import {
   PARAM_FILTERS,
   PARAM_PAGE
 } from "../../constants";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 class App extends Component {
   constructor(props) {
@@ -96,7 +98,11 @@ class App extends Component {
           optFor={optFor}
           handleSelectChange={this.handleSelectChange}
         />
-        {!isLoading && (
+        {isLoading ? (
+          <div class="spinner">
+            <FontAwesomeIcon icon={faSpinner} spin size="3x" />
+          </div>
+        ) : (
           <Table list={hits} selected={page} onClick={this.handlePageClick} />
         )}
         {error && <div>{error}</div>}
