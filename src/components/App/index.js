@@ -56,9 +56,18 @@ class App extends Component {
     url = url.concat(PARAM_PAGE, page);
     console.log(url);
     fetch(url)
-      .then(response => response.json())
+      .then(response => {
+        if (response.ok) return response.json();
+        throw new Error("Network response was not ok.");
+      })
       .then(result => this.setState({ data: result, isLoading: false, page }))
-      .catch(error => this.setState({ error }));
+      .catch(error =>
+        this.setState({
+          error:
+            "There has been a problem with your fetch operation: " +
+            error.message
+        })
+      );
   }
 
   handleInputChange(event) {
@@ -98,14 +107,15 @@ class App extends Component {
           optFor={optFor}
           handleSelectChange={this.handleSelectChange}
         />
-        {isLoading ? (
-          <div class="spinner">
-            <FontAwesomeIcon icon={faSpinner} spin size="3x" />
-          </div>
-        ) : (
-          <Table list={hits} selected={page} onClick={this.handlePageClick} />
-        )}
-        {error && <div>{error}</div>}
+        {!error &&
+          (isLoading ? (
+            <div class="spinner">
+              <FontAwesomeIcon icon={faSpinner} spin size="3x" />
+            </div>
+          ) : (
+            <Table list={hits} selected={page} onClick={this.handlePageClick} />
+          ))}
+        {error && <div className="error">{error}</div>}
       </div>
     );
   }

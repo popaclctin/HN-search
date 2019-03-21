@@ -15,3 +15,9 @@
   color: grey;
   text-align: center;
 }
+
+.error {
+  padding: 20px;
+  text-align: center;
+  color: red;
+}
