@@ -20,7 +20,8 @@ const Item = ({ item }) => {
     points,
     num_comments,
     created_at_i,
-    comment_text
+    comment_text,
+    objectID
   } = item;
   return (
     <div className="item">
@@ -28,10 +29,38 @@ const Item = ({ item }) => {
         <a href={url}>{title}</a>
       </h2>
       <ul className="info">
-        <li>{points} points</li>
-        <li>{author}</li>
-        <li>{timeAgo(Date.now() - created_at_i * 1000)}</li>
-        <li>{num_comments} comments</li>
+        <li>
+          <a
+            href={`https://news.ycombinator.com/item?id=${objectID}`}
+            title="See original post on HN"
+          >
+            {points} points
+          </a>
+        </li>
+        <li>
+          <a
+            href={`https://news.ycombinator.com/user?id=${author}`}
+            title={`See ${author} profile`}
+          >
+            {author}
+          </a>
+        </li>
+        <li>
+          <a
+            href={`https://news.ycombinator.com/item?id=${objectID}`}
+            title={new Date(created_at_i * 1000).toISOString()}
+          >
+            {timeAgo(Date.now() - created_at_i * 1000)}
+          </a>
+        </li>
+        <li>
+          <a
+            href={`https://news.ycombinator.com/item?id=${objectID}`}
+            title="See original post on HN"
+          >
+            {num_comments} comments
+          </a>
+        </li>
         {url && (
           <li>
             <a href={url}>({url})</a>

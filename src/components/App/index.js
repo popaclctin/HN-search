@@ -57,10 +57,14 @@ class App extends Component {
     console.log(url);
     fetch(url)
       .then(response => {
-        if (response.ok) return response.json();
+        if (response.ok) {
+          return response.json();
+        }
         throw new Error("Network response was not ok.");
       })
-      .then(result => this.setState({ data: result, isLoading: false, page }))
+      .then(result => {
+        this.setState({ data: result, isLoading: false, page });
+      })
       .catch(error =>
         this.setState({
           error:
